@@ -1,43 +1,90 @@
-customer_name = input ("Enter customer name: ")
-count = 0
-sum = 0
+store_info = ("FreshMart", "Astana, Respublika Ave 1", "+7 700 000 0000")
+
+print("=" * 30)
+print(store_info[0])
+print(store_info[1])
+print(store_info[2])
+print("=" * 30)
+print()
+
+names = []
+prices = []
 
 while True:
-    product_name = input ("Enter product name (or 'done' to finish): ")
-    if product_name.lower () == "done":
+    product_name = input("Enter product name (or 'done' to finish): ")
+    if product_name.lower() == "done":
         break
-    price = float (input ("Enter price: "))
-    count += 1
-    sum += price
 
-print ()
-print ("Customer: ", customer_name.upper())
-print ("Items : ", count)
-print ("Subtotal: ", sum, "KZT")
+    price = float(input("Enter price: "))
 
-print ()    
-if (sum < 3000):
-    discount = 0
+    names.append(product_name)
+    prices.append(price)
+
+print()
+print("-" * 30)
+print("Your cart (", len(names), "items):")
+print("-" * 30)
+
+for i in range(len(names)):
+    print(names[i], "-", prices[i], "KZT")
+
+print("-" * 30)
+
+customer = input("Enter customer name: ")
+
+subtotal = sum(prices)
+
+if subtotal < 3000:
+    discount_rate = 0
     discount_name = "No discount"
-elif (sum >= 3000 and sum < 7000):
-    discount = 0.05
-    discount_name = "5% discount"
+elif subtotal < 7000:
+    discount_rate = 0.05
+    discount_name = "Standard discount"
 else:
-    discount = 0.15
-    discount_name = "15% discount"
-total_discount = sum * discount
-total = sum - total_discount
+    discount_rate = 0.15
+    discount_name = "Premium discount"
 
-print ("Discount tier: ", discount_name)
-print ("Discount: ", total_discount, "KZT")
-print ("Total: ", total, "KZT")
+discount_value = subtotal * discount_rate
+total = subtotal - discount_value
 
-print ()
-print ("Name uppercase: ", customer_name.upper())
-print ("Name lowercase: ", customer_name.lower())
-length = len (customer_name)
-print ("Name length: ", length)
-if (length > 5):
-    print ("Long name")
-else:
-    print ("Short name")
+receipt = {
+    "customer": customer,
+    "items": len(names),
+    "subtotal": subtotal,
+    "discount": discount_value,
+    "discount_name": discount_name,
+    "total": total
+}
+
+print()
+print("=" * 30)
+print("RECEIPT -", store_info[0])
+print("=" * 30)
+
+print("Customer :", receipt["customer"])
+print("Items :", receipt["items"])
+print("-" * 30)
+
+for i in range(len(names)):
+    print(names[i], "-", prices[i], "KZT")
+
+print("-" * 30)
+print("Subtotal :", receipt["subtotal"], "KZT")
+print("Discount :", receipt["discount"], "KZT", "(" + receipt["discount_name"] + ")")
+print("Total :", receipt["total"], "KZT")
+print("=" * 30)
+
+print()
+print("Unique product tracker")
+
+weekly_products = set()
+
+while True:
+    name = input("Enter product name (or 'done' to finish): ")
+    if name.lower() == "done":
+        break
+    weekly_products.add(name)
+
+print()
+print("Unique products:", len(weekly_products))
+print(weekly_products)
