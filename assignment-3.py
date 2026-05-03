@@ -29,7 +29,6 @@ class FileManager:
             print(f"Output folder already exists: {folder}/")
 
 
-
 class DataLoader:
     def __init__(self, filename):
         self.filename = filename
@@ -37,6 +36,7 @@ class DataLoader:
 
     def load(self):
         print("Loading data...")
+        self.students = []
 
         try:
             with open(self.filename, "r", encoding="utf-8") as file:
@@ -101,6 +101,7 @@ class DataAnalyser:
         avg_gpa = round(avg_gpa, 2)
 
         self.result = {
+            "analysis": "GPA Statistics",
             "total_students": len(self.students),
             "average_gpa": avg_gpa,
             "max_gpa": max_gpa,
@@ -123,6 +124,25 @@ class DataAnalyser:
 
 
 
+class LambdaProcessor:
+    def __init__(self, students):
+        self.students = students
+
+    def process(self):
+        high_gpa = list(filter(lambda s: float(s["GPA"]) > 3.8, self.students))
+        gpa_values = list(map(lambda s: float(s["GPA"]), self.students))
+        hard_workers = list(filter(lambda s: float(s["study_hours_per_day"]) > 4, self.students))
+
+        print("-" * 30)
+        print("Lambda / Map / Filter")
+        print("-" * 30)
+        print(f"Students with GPA > 3.8 : {len(high_gpa)}")
+        print(f"GPA values (first 5) : {gpa_values[:5]}")
+        print(f"Students studying > 4 hrs : {len(hard_workers)}")
+        print("-" * 30)
+
+
+
 class ResultSaver:
     def __init__(self, result, output_path):
         self.result = result
@@ -137,7 +157,6 @@ class ResultSaver:
 
         except Exception as error:
             print(f"Error: could not save result: {error}")
-
 
 
 fm = FileManager(filename)
@@ -156,5 +175,11 @@ analyser = DataAnalyser(dl.students)
 analyser.analyse()
 analyser.print_results()
 
+lambda_processor = LambdaProcessor(dl.students)
+lambda_processor.process()
+
 saver = ResultSaver(analyser.result, "output/result.json")
 saver.save_json()
+
+wrong_loader = DataLoader("wrong_file.csv")
+wrong_loader.load()
