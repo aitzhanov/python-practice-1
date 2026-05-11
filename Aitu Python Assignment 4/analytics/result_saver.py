@@ -1,0 +1,17 @@
+import json
+
+
+class ResultSaver:
+    def __init__(self, result, output_path):
+        self.result = result
+        self.output_path = output_path
+
+    def save_json(self):
+        try:
+            with open(self.output_path, "w", encoding="utf-8") as f:
+                json.dump(self.result, f, indent=4)
+
+            print(f"Result saved to {self.output_path}")
+
+        except Exception as error:
+            print(f"Error: could not save result: {error}")
